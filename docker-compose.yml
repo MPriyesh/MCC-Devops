@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - SECRET_KEY=supersecretkey
+      - MONGO_URI=mongodb://mongo:27017/flaskdb
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+    volumes:
+      - ./app:/app  # Mount local directory to container for code sync
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+    volumes:
+      - mongo-data:/data/db  # Persist MongoDB data
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+
